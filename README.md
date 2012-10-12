@@ -1,3 +1,5 @@
+*Note*: this is a Ruby 1.8.7 port of the original cube-ruby.
+
 # cube-ruby
 
 A Cube client for Ruby (http://square.github.com/cube). Heavily based on
