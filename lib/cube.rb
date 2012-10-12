@@ -73,14 +73,14 @@ module Cube
 
       # Start constructing the message to be sent to Cube over UDP.
       message = {
-        type => "#{prefix}#{type}"
+        :type => "#{prefix}#{type}"
       }
       message[:time] = time.iso8601 unless time.nil?
       message[:id] = id unless id.nil?
       message[:data] = data unless data.nil?
 
       # JSONify it, log it, and send it off.
-      message_str = message.to_json
+      message_str = [message].to_json
       self.class.logger.debug { "Cube: #{message_str}" } if self.class.logger
 
       socket.send message_str, 0, @host, @port
