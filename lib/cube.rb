@@ -34,7 +34,23 @@ module Cube
     # @param [String] The desired name of the new Cube event.
     # @param [Array] A splat that takes an optional DateTime, an event id
     #   (typically an integer, but can be any object), and a Hash of data.
-    def send(type, time = Time.now, id = nil, data = {})
+    def send(type, *args)
+      time = nil
+      id = nil
+      data = nil
+
+      until args.empty?
+        arg = args.shift
+
+        if arg.respond_to?(:iso8601)
+          time ||= arg
+        elsif arg.is_a? Hash
+          data ||= arg
+        else
+          id ||= arg
+        end
+      end
+      
       # Send off our parsed arguments to be further massaged and socketized.
       actual_send type, time, id, data
     end
@@ -68,8 +84,8 @@ module Cube
       self.class.logger.debug { "Cube: #{message_str}" } if self.class.logger
 
       socket.send message_str, 0, @host, @port
-    rescue => err
-      self.class.logger.error { "Cube: #{err.class} #{err}" } if self.class.logger
+    #rescue => err
+    #  self.class.logger.error { "Cube: #{err.class} #{err}" } if self.class.logger
     end
 
     # Helper for getting the socket. `@socket` can be set to a mock object to
